@@ -78,7 +78,6 @@ subset(Data, u > 1)
 ## Creating plots
 ```{r}
 plot(u,v)
-load("~/Lehre/WS1819/Spring_School/ver-master/data/ver2_data_R/daisy2.rdata")
 ```
 
 # Working with real Data and using grammar of graphics (ggplot)
@@ -107,15 +106,28 @@ ggplot(d, aes(x=DIM, y=GEMELK, colour = factor(Kuh))) +
 
 ```{r}
 #ggplot(data = d, aes(x = LAKTATION, y = GEMELK)) + geom_bar()
-p <- ggplot(data = d, aes(x=LAKTATION, y=GEMELK, fill=factor(LAKTATION))) + geom_boxplot()
-p
+p <- ggplot(data = d, aes(x=LAKTATION, y=GEMELK, fill=factor(LAKTATION)))
+p + geom_boxplot()
 ```
 
 ## Box plot with jittered points
 
 ```{r}
 # 0.2 : degree of jitter in x direction
-p + geom_jitter(shape=16, position=position_jitter(0.2))
+p + geom_boxplot() + geom_jitter(shape=16, position=position_jitter(0.2))
+```
+
+# Violin plots
+
+```{r}
+p + geom_violin()
+```
+
+
+## Values distributions
+
+```{r}
+ggplot(d, aes( x = GEMELK, colour = factor(LAKTATION))) + geom_density()
 ```
 
 ## Curve fitting
@@ -124,3 +136,6 @@ p + geom_jitter(shape=16, position=position_jitter(0.2))
  ggplot( d, aes( x = DIM, y = GEMELK )) + geom_point( aes( colour = factor(LAKTATION)), shape = 19 ) + geom_smooth( method = "loess" ) + scale_colour_discrete( guide = FALSE )
 ```
 
+```{r}
+ggplot( d, aes( x = DIM, y = GEMELK )) + geom_point( aes( colour = factor(LAKTATION)), shape = 19 ) + scale_colour_discrete( guide = FALSE )+geom_density2d()
+```
