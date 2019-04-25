@@ -1,0 +1,126 @@
+---
+title: "Intro into R"
+author: "vitaly.belik@fu-berlin.de"
+date: '`r format(Sys.Date(), "%Y-%B-%d")`'
+output:
+  html_document:
+    depth: 3
+    fig_caption: yes
+    highlight: tango
+    number_sections: yes
+    theme: paper
+    toc: yes
+  pdf_document:
+    number_sections: yes
+    toc: yes
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Basics
+## Show the current directory
+```{r}
+getwd()
+```
+## Creating arrays of values
+```{r}
+y <- c(1,10)
+y
+u <- c(1:10)
+u
+v <- u^2
+v
+```
+## Creating dataframe
+```{r}
+df <- data.frame(u,v)
+df
+```
+## Writing dataframe to file
+```{r}
+write.csv(df, file = "MyData.csv")
+list.files()
+```
+## Reading data from file
+```{r}
+ndf <- read.csv("MyData.csv")
+colnames(ndf)
+summary(ndf)
+```
+## Deleting a column
+```{r}
+Data <- subset( ndf, select = -X )
+Data
+```
+## Adding a column
+```{r}
+Data['w'] <-u
+Data
+```
+## For-loop and if-condition
+```{r}
+for (i in c(1:10)){
+  print(c("index :",i))
+  if ((i > 3) & (i<10)){
+    print("within if-condition")
+    }
+}
+```
+## Subsetting / filtering data
+```{r}
+Data[Data$u == 1,]
+Data[Data$u == 2,]
+?subset
+subset(Data, u > 1)
+```
+## Creating plots
+```{r}
+plot(u,v)
+load("~/Lehre/WS1819/Spring_School/ver-master/data/ver2_data_R/daisy2.rdata")
+```
+
+# Working with real Data and using grammar of graphics (ggplot)
+```{r}
+library(ggplot2)
+```
+
+
+## Lactation curve
+```{r}
+#d = read.table('ReadData.csv', header = TRUE, sep = ";", dec = ',')
+d = read.table('RealData.csv', header = TRUE, sep = ',')
+ggplot(d, aes(x=DIM, y=GEMELK)) + geom_point() 
+```
+## Lactation curve
+```{r}
+#d = read.table('ReadData.csv', header = TRUE, sep = ";", dec = ',')
+d = read.table('RealData.csv', header = TRUE, sep = ',')
+ggplot(d, aes(x=DIM, y=GEMELK, colour = factor(Kuh))) +
+  theme(text = element_text(size=18)) +
+  geom_point(alpha = 0.3) +
+  labs(x = "cc", y = "milk")
+```
+
+## Box plots
+
+```{r}
+#ggplot(data = d, aes(x = LAKTATION, y = GEMELK)) + geom_bar()
+p <- ggplot(data = d, aes(x=LAKTATION, y=GEMELK, fill=factor(LAKTATION))) + geom_boxplot()
+p
+```
+
+## Box plot with jittered points
+
+```{r}
+# 0.2 : degree of jitter in x direction
+p + geom_jitter(shape=16, position=position_jitter(0.2))
+```
+
+## Curve fitting
+
+```{r}
+ ggplot( d, aes( x = DIM, y = GEMELK )) + geom_point( aes( colour = factor(LAKTATION)), shape = 19 ) + geom_smooth( method = "loess" ) + scale_colour_discrete( guide = FALSE )
+```
+
